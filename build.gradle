@@ -74,8 +74,10 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+/*
 tasks.named("bootBuildImage") {
     docker {
         host = "/Users/sumankhara/.rd/docker.sock"
     }
 }
+*/
