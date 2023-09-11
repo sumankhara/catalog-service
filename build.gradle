@@ -12,13 +12,70 @@ repositories {
 	mavenCentral()
 }
 
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+ext {
+	set('springCloudVersion', "2021.0.7")
+	set('testcontainersVersion', "1.17.3")
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+	implementation 'org.springframework.retry:spring-retry'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.projectlombok:lombok:1.18.28'
+	implementation 'org.flywaydb:flyway-core'
+	
+	runtimeOnly	'org.postgresql:postgresql'
+	
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor 'org.projectlombok:lombok:1.18.20'
+	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+	testImplementation "org.testcontainers:testcontainers:1.18.3"
+	testImplementation "org.testcontainers:postgresql:1.18.3"
+	testImplementation 'org.testcontainers:junit-jupiter:1.18.3'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+	}
+}
+
+bootRun {
+	systemProperty 'spring.profiles.active', 'testdata'
+}
+
+bootBuildImage {
+	imageName = "${project.name}"
+	environment = ["BP_JVM_VERSION": "11.*"]
+
+	docker {
+		publishRegistry {
+			username = project.findProperty("registryUsername")
+			password = project.findProperty("registryToken")
+			url = project.findProperty("registryUrl")
+		}
+	}
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.named("bootBuildImage") {
+    docker {
+        host = "/Users/sumankhara/.rd/docker.sock"
+    }
 }
