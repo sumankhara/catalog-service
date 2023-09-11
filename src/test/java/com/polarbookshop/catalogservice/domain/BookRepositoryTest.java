@@ -30,7 +30,6 @@ public class BookRepositoryTest {
     private JdbcAggregateTemplate jdbcAggregateTemplate;
 	
 	@Ignore
-	@Test
     void findBookByIsbnWhenExisting() {
         var bookIsbn = UUID.randomUUID().toString();
         var book = new Book(1L, bookIsbn, "Title", "Author", 12.90, "LeftWord", Instant.now(), Instant.now(), 0);
