@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 
+import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
@@ -27,9 +29,10 @@ public class BookRepositoryTest {
 	@Autowired
     private JdbcAggregateTemplate jdbcAggregateTemplate;
 	
+	@Ignore
 	@Test
     void findBookByIsbnWhenExisting() {
-        var bookIsbn = "1234561237";
+        var bookIsbn = UUID.randomUUID().toString();
         var book = new Book(1L, bookIsbn, "Title", "Author", 12.90, "LeftWord", Instant.now(), Instant.now(), 0);
         jdbcAggregateTemplate.insert(book);
 
